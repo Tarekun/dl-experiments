@@ -1,0 +1,23 @@
+defaults:
+  - _self_
+
+dataset: cifar100
+conv_layers: 3
+lin_layers: 2
+train_cfg:
+  epochs: 50
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 0.001
+    # momentum: 0.9
+  loss_fn:
+    _target_: torch.nn.CrossEntropyLoss
+
+hydra:
+  run:
+    dir: .
+  mode: MULTIRUN
+  sweeper:
+    params:
+      conv_layers: 2, 3, 5, 8, 13
+      lin_layers: 2, 3, 4
