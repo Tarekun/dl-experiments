@@ -3,11 +3,12 @@ defaults:
   - optimizer/adamw.yaml
 
 dataset: cifar100
-conv_layers: 3
-lin_layers: 2
 epochs: 50
+num_runs: 10
 loss_fn:
   _target_: torch.nn.CrossEntropyLoss
+conv_layers: 3
+lin_layers: 2
 
 hydra:
   run:
@@ -15,6 +16,6 @@ hydra:
   # mode: MULTIRUN
   # sweeper:
   #   params:
-  #     optimizer: optimizer/adamw-lo, optimizers/adamw, optimizers/adamw-hi
+  #     +optimizer: adamw-lo, adamw, adamw-hi
   #     conv_layers: 2, 3, 5, 8, 13
   #     lin_layers: 2, 3, 4

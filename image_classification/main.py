@@ -1,9 +1,11 @@
-from models import SimpleCNN
-from train import train
-from data import get_loaders
 from omegaconf import DictConfig
 import omegaconf
 import hydra
+
+from models import SimpleCNN
+from train import train
+from data import get_loaders
+from visualization import plot_simulations
 
 
 @hydra.main(config_path="config", config_name="main", version_base="1.2")
@@ -15,8 +17,13 @@ def main(cfg: DictConfig):
         num_classes=100, conv_layers=cfg.conv_layers, lin_layers=cfg.lin_layers
     )
 
-    train(model, trainloader, testloader, cfg)
+    evaluations = []
+    for _ in range(cfg.num_runs):
+        losses, accuracies = train(model, trainloader, testloader, cfg)
+        evaluations.append((losses, accuracies))
+
     print("Finished Training")
+    plot_simulations(evaluations, cfg)
 
 
 if __name__ == "__main__":
