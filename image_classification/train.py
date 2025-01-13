@@ -47,10 +47,10 @@ def train_epoch(model, trainloader, optimizer, criterion):
             print(f"\t[Batch {i + 1}] loss: {running_loss / 100:.3f}")
 
 
-def train(model, trainloader, testloader, train_cfg: DictConfig):
-    num_epochs = train_cfg.epochs
-    optimizer = hydra.utils.instantiate(train_cfg.optimizer, params=model.parameters())
-    criterion = hydra.utils.instantiate(train_cfg.loss_fn)
+def train(model, trainloader, testloader, cfg: DictConfig):
+    num_epochs = cfg.epochs
+    optimizer = hydra.utils.instantiate(cfg.optimizer, params=model.parameters())
+    criterion = hydra.utils.instantiate(cfg.loss_fn)
     model = model.to(device)
 
     for epoch in range(num_epochs):
