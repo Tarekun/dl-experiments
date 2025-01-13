@@ -4,6 +4,7 @@ import torch.optim as optim
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Running on {device}")
 
 
 def test(model, testloader):
@@ -28,6 +29,7 @@ def train_epoch(model, trainloader, optimizer, criterion):
 
     for i, data in enumerate(trainloader):
         inputs, labels = data[0].to(device), data[1].to(device)
+        model.to(device)
 
         # Zero the parameter gradients
         optimizer.zero_grad()
@@ -52,4 +54,4 @@ def train(model, trainloader, testloader):
     for epoch in range(num_epochs):
         print(f"Starting epoch {epoch+1}")
         train_epoch(model, trainloader, optimizer, criterion)
-        test(testloader)
+        test(model, testloader)
