@@ -58,8 +58,6 @@ def create_single_plot(
         abs(max_acc - avg) for avg, max_acc in zip(accuracies, max_accuracy)
     ]
     error = [lower_errors, upper_errors]
-    print(lower_errors)
-    print(upper_errors)
 
     # Plot averaged accuracy with error bars
     ax2.errorbar(
@@ -95,7 +93,7 @@ def create_single_plot(
 
 def _average_metrics(histories):
     num_histories = len(histories)
-    num_rounds = len(histories[0])
+    num_rounds = len(histories[0][0])
 
     loss_sum = [0.0] * num_rounds
     accuracy_sum = [0.0] * num_rounds
