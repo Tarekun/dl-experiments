@@ -1,4 +1,5 @@
 import torch
+from torch.utils.data import DataLoader
 from omegaconf import DictConfig
 import hydra
 
@@ -6,7 +7,14 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Running on {device}")
 
 
-def evaluate(model, criterion, testloader) -> tuple[float, float]:
+def optimal_torch_config(model):
+    # reference: https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html
+    torch.set_float32_matmul_precision("medium")  # enable float16
+    torch.backends.cudnn.benchmark = True  # enable cuDNN for CNN
+    return torch.compile(model, "reduce-overhead")  # cuda graph to keep compute in gpu
+
+
+def evaluate(model, criterion, testloader: DataLoader) -> tuple[float, float]:
     model.eval()
     correct = 0
     total = 0
@@ -29,8 +37,10 @@ def evaluate(model, criterion, testloader) -> tuple[float, float]:
     return running_loss.item(), correct / total
 
 
-def train_epoch(model, trainloader, optimizer, criterion):
+def train_epoch(model, trainloader: DataLoader, optimizer, criterion):
     model.train()
+    # amp implementation copyed from https://www.reddit.com/r/MachineLearning/comments/kvs1ex/d_here_are_17_ways_of_making_pytorch_training/
+    scaler = torch.amp.GradScaler("cuda")
     running_loss = 0.0
 
     for i, data in enumerate(trainloader):
@@ -38,13 +48,20 @@ def train_epoch(model, trainloader, optimizer, criterion):
         model.to(device)
 
         # Zero the parameter gradients
-        optimizer.zero_grad()
+        # reduces memory operations compare to optimizer.zero_grad()
+        # see https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html#use-parameter-grad-none-instead-of-model-zero-grad-or-optimizer-zero-grad
+        for param in model.parameters():
+            param.grad = None
         # Forward pass
         outputs = model(inputs)
         loss = criterion(outputs, labels)
         # Backward pass and optimize
+        # scaler.scale(loss).backward()
         loss.backward()
+        # scaler.step(optimizer)
         optimizer.step()
+        # Updates the scale for next iteration
+        # scaler.update()
 
         running_loss += loss.item()
         if i % 100 == 99:
@@ -52,12 +69,12 @@ def train_epoch(model, trainloader, optimizer, criterion):
 
 
 def train(
-    model, trainloader, testloader, cfg: DictConfig
+    model, trainloader: DataLoader, testloader: DataLoader, cfg: DictConfig
 ) -> tuple[list[float], list[float]]:
     num_epochs = cfg.epochs
     optimizer = hydra.utils.instantiate(cfg.optimizer, params=model.parameters())
     criterion = hydra.utils.instantiate(cfg.loss_fn)
-    model = model.to(device)
+    model = optimal_torch_config(model.to(device))
 
     enable_early_stopping = cfg.get("enable_early_stopping", True)
     if enable_early_stopping:
