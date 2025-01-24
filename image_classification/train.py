@@ -1,9 +1,6 @@
 import torch
-import torch.nn as nn
-import torch.optim as optim
 from omegaconf import DictConfig
 import hydra
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Running on {device}")
@@ -62,6 +59,16 @@ def train(
     criterion = hydra.utils.instantiate(cfg.loss_fn)
     model = model.to(device)
 
+    enable_early_stopping = cfg.get("enable_early_stopping", True)
+    if enable_early_stopping:
+        patience = cfg.get("early_stopping_patience", 5)
+        delta = cfg.get("early_stopping_delta", 0.0)
+        # 'min' for loss, 'max' for accuracy
+        target = cfg.get("early_stopping_target", "loss")
+        best_metric = float("inf") if target == "loss" else 0.0
+        current_patience = 0
+        best_weights = None
+
     losses = []
     accuracies = []
     for epoch in range(num_epochs):
@@ -71,5 +78,26 @@ def train(
 
         losses.append(loss)
         accuracies.append(accuracy)
+
+        if enable_early_stopping:
+            if target == "loss":
+                current_metric = loss
+                improved = current_metric < best_metric - delta
+            else:
+                current_metric = accuracy
+                improved = current_metric > best_metric + delta
+
+            if improved:
+                best_metric = current_metric
+                current_patience = 0
+                best_weights = model.state_dict().copy()
+            else:
+                current_patience += 1
+                if current_patience >= patience:
+                    print(f"Early stopping at epoch {epoch+1}")
+                    # load best performing model before breaking
+                    if best_weights is not None:
+                        model.load_state_dict(best_weights)
+                    break
 
     return losses, accuracies

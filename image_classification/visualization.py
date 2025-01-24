@@ -2,6 +2,7 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from omegaconf import DictConfig
+from commons import config_key
 
 
 PLOTS_DIR = "./plots"
@@ -10,11 +11,7 @@ os.makedirs(PLOTS_DIR, exist_ok=True)
 
 def _format_filename(cfg: DictConfig):
     name = "results"
-    name += f"-o{cfg.optimizer._target_}"
-    name += f"-lr{cfg.optimizer.lr}"
-    name += f"-con{cfg.conv_layers}"
-    name += f"-lin{cfg.lin_layers}"
-    name += f"-e{cfg.epochs}"
+    name += config_key(cfg)
 
     name = name.replace(".", "_")
     return f"{name}.png"
