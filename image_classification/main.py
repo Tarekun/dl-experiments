@@ -7,16 +7,24 @@ from train import train, device
 from data import get_loaders
 from visualization import plot_simulations
 from commons import config_key
+from checkpoint import run_finished, config_finished, load_checkpoint
 
 
 @hydra.main(config_path="config", config_name="main", version_base="1.2")
 def main(cfg: DictConfig):
     print(f"Starting training with config:\n\n{OmegaConf.to_yaml(cfg)}")
     print(f"Running on {device}")
+
     trainloader, testloader = get_loaders(cfg.dataset)
     evaluations = []
+    checkpoint = load_checkpoint()
+    if cfg in checkpoint["configs"]:
+        print("Skipping execution, this config was found in the checkpoint")
+        return
+    first_run = checkpoint["run"] + 1
+
     for run in tqdm.tqdm(
-        range(cfg.num_runs),
+        range(first_run, cfg.num_runs),
         desc=config_key(cfg),
         leave=True,
     ):
@@ -27,9 +35,11 @@ def main(cfg: DictConfig):
         )
         losses, accuracies = train(model, trainloader, testloader, cfg)
         evaluations.append((losses, accuracies))
+        run_finished(run)
 
     print("Finished Training")
     plot_simulations(evaluations, cfg)
+    config_finished(cfg)
 
 
 if __name__ == "__main__":

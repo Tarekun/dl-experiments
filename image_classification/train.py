@@ -11,7 +11,7 @@ def optimal_torch_config(model):
         import triton
 
         # reference: https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html
-        torch.set_float32_matmul_precision("medium")  # enable float16
+        torch.set_float32_matmul_precision("medium")
         torch.backends.cudnn.benchmark = True  # enable cuDNN for CNN
         # cuda graph to keep compute in gpu
         model = torch.compile(model, mode="reduce-overhead")
