@@ -3,8 +3,8 @@ defaults:
   - optimizer/adamw.yaml
 
 dataset: cifar100
-epochs: 50
-num_runs: 5
+epochs: 10
+num_runs: 2
 loss_fn:
   _target_: torch.nn.CrossEntropyLoss
 conv_layers: 3

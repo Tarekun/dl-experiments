@@ -3,33 +3,11 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
   },
+  "python.analysis.typeCheckingMode": "basic",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "[javascript]": {
-    "editor.tabSize": 2
-  },
-  "[javascriptreact]": {
-    "editor.tabSize": 2
-  },
-  "[typescript]": {
-    "editor.tabSize": 2
-  },
-  "[typescriptreact]": {
-    "editor.tabSize": 2
-  },
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.tabSize": 4,
     "editor.formatOnSave": true
-  },
-  "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer",
-    "editor.formatOnSave": true
   }
 }
-  

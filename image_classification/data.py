@@ -8,12 +8,10 @@ train_transforms = transforms.Compose(
     [
         transforms.RandomHorizontalFlip(),
         transforms.RandomCrop(32, padding=4),
-        # Random vertical flip with probability 0.2 (less common but can be useful)
         transforms.RandomVerticalFlip(p=0.2),
         transforms.RandomRotation(15),
         # Randomly adjust the brightness, contrast, saturation, and hue
         # transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.02),
-        # Random grayscale conversion with probability 0.1
         transforms.RandomGrayscale(p=0.1),
         # Mean and std are pre-computed for CIFAR-10 RGB channels
         transforms.ToTensor(),  # Converts image to PyTorch tensor

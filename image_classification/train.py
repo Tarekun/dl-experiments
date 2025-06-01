@@ -4,14 +4,21 @@ from omegaconf import DictConfig
 import hydra
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Running on {device}")
 
 
 def optimal_torch_config(model):
-    # reference: https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html
-    torch.set_float32_matmul_precision("medium")  # enable float16
-    torch.backends.cudnn.benchmark = True  # enable cuDNN for CNN
-    return torch.compile(model, "reduce-overhead")  # cuda graph to keep compute in gpu
+    try:
+        import triton
+
+        # reference: https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html
+        torch.set_float32_matmul_precision("medium")  # enable float16
+        torch.backends.cudnn.benchmark = True  # enable cuDNN for CNN
+        # cuda graph to keep compute in gpu
+        model = torch.compile(model, mode="reduce-overhead")
+        return model
+    except ImportError:
+        print("Skipping torch.compile: Triton not installed")
+        return model
 
 
 def evaluate(model, criterion, testloader: DataLoader) -> tuple[float, float]:
