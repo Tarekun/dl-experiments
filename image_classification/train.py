@@ -11,7 +11,7 @@ def optimal_torch_config(model):
         import triton
 
         # reference: https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html
-        torch.set_float32_matmul_precision("medium")  # enable float16
+        torch.set_float32_matmul_precision("medium")
         torch.backends.cudnn.benchmark = True  # enable cuDNN for CNN
         # cuda graph to keep compute in gpu
         model = torch.compile(model, mode="reduce-overhead")
@@ -71,8 +71,9 @@ def train_epoch(model, trainloader: DataLoader, optimizer, criterion):
         # scaler.update()
 
         running_loss += loss.item()
-        if i % 100 == 99:
-            print(f"\t[Batch {i + 1}] loss: {running_loss / 100:.3f}")
+        # if i % 100 == 99:
+        #     print(f"\t[Batch {i + 1}] loss: {running_loss / 100:.3f}")
+    print(f"Total epoch loss: {running_loss}")
 
 
 def train(
