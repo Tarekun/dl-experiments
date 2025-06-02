@@ -28,7 +28,6 @@ def main(cfg: DictConfig):
         desc=config_key(cfg),
         leave=True,
     ):
-        # for run in range(cfg.num_runs):
         print(f"Starting training run number {run}")
         model = SimpleCNN(
             num_classes=100, conv_layers=cfg.conv_layers, lin_layers=cfg.lin_layers
@@ -40,10 +39,13 @@ def main(cfg: DictConfig):
     print("Finished Training")
     plot_simulations(evaluations, cfg)
     config_finished(cfg)
+    run_finished(-1)  # reset to start back from the first ran
 
 
 if __name__ == "__main__":
     try:
+        print("calling main")
         main()
+        print("main returned")
     except Exception as e:
         print(f"UNRECOVERABLE ERROR:\n{e}")

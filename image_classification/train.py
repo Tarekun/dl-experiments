@@ -71,8 +71,9 @@ def train_epoch(model, trainloader: DataLoader, optimizer, criterion):
         # scaler.update()
 
         running_loss += loss.item()
-        if i % 100 == 99:
-            print(f"\t[Batch {i + 1}] loss: {running_loss / 100:.3f}")
+        # if i % 100 == 99:
+        #     print(f"\t[Batch {i + 1}] loss: {running_loss / 100:.3f}")
+    print(f"Total epoch loss: {running_loss}")
 
 
 def train(
