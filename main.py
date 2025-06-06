@@ -20,7 +20,7 @@ def get_experiment(cfg: DictConfig) -> Type[Experiment]:
             return experiment
 
     raise ValueError(
-        f"Configured experiment {cfg.experiment} is not supported. The supported ones are:\n{supported}"
+        f"Configured experiment {cfg.experiment} is not supported. The supported ones are:\n{[e.name() for e in supported]}"
     )
 
 

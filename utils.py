@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from omegaconf import DictConfig
 
 
+OUT_DIRECTORY = ".internals"
+
+
 class Experiment(ABC):
     @staticmethod
     @abstractmethod

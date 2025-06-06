@@ -2,6 +2,7 @@ defaults:
   - _self_
   - optimizer/adamw.yaml
 
+experiment: cifar100
 dataset: cifar100
 epochs: 40
 num_runs: 10
@@ -12,7 +13,7 @@ lin_layers: 2
 
 hydra:
   run:
-    dir: .
+    dir: .internals
   mode: MULTIRUN
   sweeper:
     params:

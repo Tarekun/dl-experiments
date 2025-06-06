@@ -9,7 +9,7 @@ from utils import Experiment
 class CnnCifar(Experiment):
     @staticmethod
     def name():
-        "suka"
+        return "cifar100"
 
     @staticmethod
     def run_experiment(cfg: DictConfig):
