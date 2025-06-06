@@ -16,6 +16,7 @@ hydra:
   mode: MULTIRUN
   sweeper:
     params:
+      +fail_fast: True
       +optimizer: adamw-lo, adamw, adamw-hi
       conv_layers: 2, 3, 5, 8, 13
       lin_layers: 2, 3, 4

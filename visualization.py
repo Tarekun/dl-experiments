@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from omegaconf import DictConfig
-from commons import config_key
+from utils import config_key
 
 
 PLOTS_DIR = "./plots"
