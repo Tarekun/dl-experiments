@@ -2,8 +2,10 @@ from pathlib import Path
 import yaml
 from omegaconf import DictConfig, OmegaConf
 
+from utils import OUT_DIRECTORY
 
-CHECKPOINT_FILE = Path("./checkpoint.yml")
+
+CHECKPOINT_FILE = Path(f"./{OUT_DIRECTORY}/checkpoint.yml")
 
 
 def load_checkpoint() -> dict:

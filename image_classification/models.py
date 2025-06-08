@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+from train import device
 
 
 class SimpleCNN(nn.Module):
@@ -13,7 +15,7 @@ class SimpleCNN(nn.Module):
 
         The first convolutional layer will have `starting_channels` input channels and
         64 output channels. All following layers will have double the input channels
-        as ouputs.\n
+        as outputs.\n
         The first linear layer will have an input number of neuron compatible with the
         output of convolutional layers and output 1024 neurons. All following layers will
         have half the input neurons as output and the last one will have `num_classes`

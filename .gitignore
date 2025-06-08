@@ -1,4 +1,5 @@
 .venv
+.internals
 /**/data
 /**/__pycache__
 /**/main.log

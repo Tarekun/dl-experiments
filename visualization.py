@@ -2,10 +2,10 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from omegaconf import DictConfig
-from commons import config_key
+from utils import config_key, OUT_DIRECTORY
 
 
-PLOTS_DIR = "./plots"
+PLOTS_DIR = f"./{OUT_DIRECTORY}/unsorted_plots"
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
 

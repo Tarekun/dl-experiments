@@ -3,6 +3,8 @@ from torch.utils.data import DataLoader
 import torchvision
 import torchvision.transforms as transforms
 
+from utils import OUT_DIRECTORY
+
 
 train_transforms = transforms.Compose(
     [
@@ -44,12 +46,18 @@ def optimized_dataloader(dataset, batch_size: int, shuffle: bool):
 
 def get_cifar_loaders() -> tuple[DataLoader, DataLoader]:
     trainset = torchvision.datasets.CIFAR100(
-        root="./data", train=True, download=True, transform=train_transforms
+        root=f"./{OUT_DIRECTORY}/data",
+        train=True,
+        download=True,
+        transform=train_transforms,
     )
     trainloader = optimized_dataloader(trainset, batch_size=128, shuffle=True)
 
     testset = torchvision.datasets.CIFAR100(
-        root="./data", train=False, download=True, transform=test_transforms
+        root=f"./{OUT_DIRECTORY}/data",
+        train=False,
+        download=True,
+        transform=test_transforms,
     )
     testloader = optimized_dataloader(testset, batch_size=128, shuffle=False)
 
