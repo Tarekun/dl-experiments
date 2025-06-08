@@ -17,4 +17,5 @@ class CnnCifar(Experiment):
         model = SimpleCNN(
             num_classes=100, conv_layers=cfg.conv_layers, lin_layers=cfg.lin_layers
         )
+        model = ResNet(layers=[2, 2, 2, 2], num_classes=100)
         return train(model, trainloader, testloader, cfg)
