@@ -1,6 +1,6 @@
 from omegaconf import DictConfig
 
-from image_classification.models import SimpleCNN
+from image_classification.models import *
 from image_classification.data import get_loaders
 from train import train
 from utils import Experiment
@@ -12,9 +12,9 @@ class CnnCifar(Experiment):
         return "cifar100"
 
     @staticmethod
-    def run_experiment(cfg: DictConfig):
+    def run_experiment(cfg: DictConfig) -> tuple[list[float], list[float]]:
         trainloader, testloader = get_loaders(cfg.dataset)
         model = SimpleCNN(
             num_classes=100, conv_layers=cfg.conv_layers, lin_layers=cfg.lin_layers
         )
-        train(model, trainloader, testloader, cfg)
+        return train(model, trainloader, testloader, cfg)
